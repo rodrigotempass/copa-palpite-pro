@@ -25,7 +25,7 @@ function Perfil() {
       if (r) {
         const sorted = [...r].sort((a: any, b: any) => b.pontos - a.pontos);
         const idx = sorted.findIndex((x: any) => x.id === user.id);
-        if (idx >= 0) setMeuRank({ pos: idx + 1, pontos: sorted[idx].pontos });
+        if (idx >= 0) setMeuRank({ pos: idx + 1, pontos: sorted[idx].pontos ?? 0 });
       }
     })();
   }, [user]);
