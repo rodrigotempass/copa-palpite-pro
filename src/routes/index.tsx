@@ -7,5 +7,5 @@ function Index() {
   const { user, loading } = useAuth();
   if (loading) return <div className="min-h-dvh grid place-items-center text-muted-foreground">Carregando…</div>;
   if (!user) return <Navigate to="/auth" />;
-  return <Navigate to="/jogos" />;
+  return <Navigate to="/palpites" />;
 }
