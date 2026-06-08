@@ -58,10 +58,11 @@ export function teamName(code: string | null | undefined) {
 
 export const FASE_LABEL: Record<string, string> = {
   grupos: "Fase de Grupos",
+  dezesseis_avos: "16-avos de Final",
   oitavas: "Oitavas de Final",
   quartas: "Quartas de Final",
   semis: "Semifinais",
   final: "Final",
 };
 
-export const FASES_ORDER = ["grupos", "oitavas", "quartas", "semis", "final"] as const;
+export const FASES_ORDER = ["grupos", "dezesseis_avos", "oitavas", "quartas", "semis", "final"] as const;

@@ -250,25 +250,57 @@ function Campeao() {
 /* ---------- Palpites (visualização) ---------- */
 function Palpites() {
   const [rows, setRows] = useState<any[]>([]);
+  const [stats, setStats] = useState<Record<string, number>>({});
+  
   useEffect(() => {
-    supabase.from("palpites").select("gols_a,gols_b,profiles(nome,email),jogos(time_a,time_b,bandeira_a,bandeira_b,data_hora,fase)").then(({ data }) => setRows(data ?? []));
+    supabase.from("palpites").select("gols_a,gols_b,profiles(nome,email),jogos(time_a,time_b,bandeira_a,bandeira_b,data_hora,fase)").then(({ data }) => {
+      const arr = data ?? [];
+      setRows(arr);
+      
+      const counts: Record<string, number> = {};
+      arr.forEach(p => {
+        const f = p.jogos?.fase || "desconhecida";
+        counts[f] = (counts[f] || 0) + 1;
+      });
+      setStats(counts);
+    });
   }, []);
+
   return (
-    <div className="space-y-2">
-      {rows.length === 0 && <p className="text-sm text-muted-foreground">Sem palpites ainda.</p>}
-      {rows.map((p, i) => (
-        <div key={i} className="card-premium rounded-xl p-3 text-sm">
-          <div className="font-bold truncate">{p.profiles?.nome}</div>
-          <div className="text-xs text-muted-foreground">{FASE_LABEL[p.jogos?.fase]} · {fmtDateTime(p.jogos?.data_hora)}</div>
-          <div className="mt-1 flex items-center gap-2">
-            <img src={flagUrl(p.jogos?.bandeira_a ?? p.jogos?.time_a, 40)} className="w-6 h-4 rounded" alt="" />
-            <span className="flex-1 truncate">{teamName(p.jogos?.bandeira_a ?? p.jogos?.time_a)}</span>
-            <b>{p.gols_a} × {p.gols_b}</b>
-            <span className="flex-1 truncate text-right">{teamName(p.jogos?.bandeira_b ?? p.jogos?.time_b)}</span>
-            <img src={flagUrl(p.jogos?.bandeira_b ?? p.jogos?.time_b, 40)} className="w-6 h-4 rounded" alt="" />
-          </div>
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-2">
+        <div className="card-premium rounded-xl p-3 flex flex-col items-center justify-center text-center">
+          <span className="text-2xl font-extrabold text-primary">{rows.length}</span>
+          <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">Total de Palpites</span>
         </div>
-      ))}
+        {Object.entries(stats).map(([fase, count]) => (
+          <div key={fase} className="card-premium rounded-xl p-3 flex flex-col items-center justify-center text-center">
+            <span className="text-xl font-extrabold text-accent">{count}</span>
+            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">{FASE_LABEL[fase] || fase}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-2">
+        <h3 className="font-bold text-sm mb-2 mt-4">Todos os Palpites</h3>
+        {rows.length === 0 && <p className="text-sm text-muted-foreground">Sem palpites ainda.</p>}
+        {rows.map((p, i) => (
+          <div key={i} className="card-premium rounded-xl p-3 text-sm flex flex-col gap-1">
+            <div className="font-bold truncate">{p.profiles?.nome}</div>
+            <div className="text-xs text-muted-foreground flex justify-between">
+              <span>{FASE_LABEL[p.jogos?.fase]}</span>
+              <span>{fmtDateTime(p.jogos?.data_hora)}</span>
+            </div>
+            <div className="mt-1 flex items-center justify-center gap-2 bg-secondary/30 p-2 rounded-lg">
+              <span className="flex-1 truncate text-right font-medium">{teamName(p.jogos?.bandeira_a ?? p.jogos?.time_a)}</span>
+              <img src={flagUrl(p.jogos?.bandeira_a ?? p.jogos?.time_a, 40)} className="w-5 h-3.5 rounded-sm shrink-0" alt="" />
+              <b className="text-lg min-w-[40px] text-center">{p.gols_a} × {p.gols_b}</b>
+              <img src={flagUrl(p.jogos?.bandeira_b ?? p.jogos?.time_b, 40)} className="w-5 h-3.5 rounded-sm shrink-0" alt="" />
+              <span className="flex-1 truncate text-left font-medium">{teamName(p.jogos?.bandeira_b ?? p.jogos?.time_b)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

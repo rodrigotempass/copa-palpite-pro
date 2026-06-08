@@ -4,9 +4,8 @@ import { useAuth } from "@/lib/auth";
 import type { ReactNode } from "react";
 
 const navItems = [
-  { to: "/jogos", label: "Jogos", icon: Calendar },
+  { to: "/palpites", label: "Meus Palpites", icon: ListChecks },
   { to: "/ranking", label: "Ranking", icon: Trophy },
-  { to: "/campeao", label: "Campeão", icon: ListChecks },
 ];
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -56,7 +55,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <main className="max-w-3xl mx-auto px-4 py-6">{children}</main>
 
       <nav className="fixed bottom-0 inset-x-0 z-30 border-t border-border bg-background/90 backdrop-blur-md">
-        <div className="max-w-3xl mx-auto grid grid-cols-4">
+        <div className="max-w-3xl mx-auto grid grid-cols-3">
           {navItems.map((it) => {
             const active = path.startsWith(it.to);
             const Icon = it.icon;

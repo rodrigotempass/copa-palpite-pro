@@ -11,8 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as PerfilRouteImport } from './routes/perfil'
-import { Route as JogosRouteImport } from './routes/jogos'
-import { Route as CampeaoRouteImport } from './routes/campeao'
+import { Route as PalpitesRouteImport } from './routes/palpites'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -27,14 +26,9 @@ const PerfilRoute = PerfilRouteImport.update({
   path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JogosRoute = JogosRouteImport.update({
-  id: '/jogos',
-  path: '/jogos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CampeaoRoute = CampeaoRouteImport.update({
-  id: '/campeao',
-  path: '/campeao',
+const PalpitesRoute = PalpitesRouteImport.update({
+  id: '/palpites',
+  path: '/palpites',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -57,8 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/campeao': typeof CampeaoRoute
-  '/jogos': typeof JogosRoute
+  '/palpites': typeof PalpitesRoute
   '/perfil': typeof PerfilRoute
   '/ranking': typeof RankingRoute
 }
@@ -66,8 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/campeao': typeof CampeaoRoute
-  '/jogos': typeof JogosRoute
+  '/palpites': typeof PalpitesRoute
   '/perfil': typeof PerfilRoute
   '/ranking': typeof RankingRoute
 }
@@ -76,30 +68,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/campeao': typeof CampeaoRoute
-  '/jogos': typeof JogosRoute
+  '/palpites': typeof PalpitesRoute
   '/perfil': typeof PerfilRoute
   '/ranking': typeof RankingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/admin'
-    | '/auth'
-    | '/campeao'
-    | '/jogos'
-    | '/perfil'
-    | '/ranking'
+  fullPaths: '/' | '/admin' | '/auth' | '/palpites' | '/perfil' | '/ranking'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/auth' | '/campeao' | '/jogos' | '/perfil' | '/ranking'
+  to: '/' | '/admin' | '/auth' | '/palpites' | '/perfil' | '/ranking'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/auth'
-    | '/campeao'
-    | '/jogos'
+    | '/palpites'
     | '/perfil'
     | '/ranking'
   fileRoutesById: FileRoutesById
@@ -108,8 +91,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
-  CampeaoRoute: typeof CampeaoRoute
-  JogosRoute: typeof JogosRoute
+  PalpitesRoute: typeof PalpitesRoute
   PerfilRoute: typeof PerfilRoute
   RankingRoute: typeof RankingRoute
 }
@@ -130,18 +112,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/jogos': {
-      id: '/jogos'
-      path: '/jogos'
-      fullPath: '/jogos'
-      preLoaderRoute: typeof JogosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/campeao': {
-      id: '/campeao'
-      path: '/campeao'
-      fullPath: '/campeao'
-      preLoaderRoute: typeof CampeaoRouteImport
+    '/palpites': {
+      id: '/palpites'
+      path: '/palpites'
+      fullPath: '/palpites'
+      preLoaderRoute: typeof PalpitesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -172,11 +147,20 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
-  CampeaoRoute: CampeaoRoute,
-  JogosRoute: JogosRoute,
+  PalpitesRoute: PalpitesRoute,
   PerfilRoute: PerfilRoute,
   RankingRoute: RankingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

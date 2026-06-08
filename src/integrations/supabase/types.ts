@@ -207,7 +207,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "participant"
-      fase_nome: "grupos" | "oitavas" | "quartas" | "semis" | "final"
+      fase_nome: "grupos" | "dezesseis_avos" | "oitavas" | "quartas" | "semis" | "final"
       user_status: "pendente" | "aprovado" | "rejeitado"
     }
     CompositeTypes: {
@@ -337,7 +337,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "participant"],
-      fase_nome: ["grupos", "oitavas", "quartas", "semis", "final"],
+      fase_nome: ["grupos", "dezesseis_avos", "oitavas", "quartas", "semis", "final"],
       user_status: ["pendente", "aprovado", "rejeitado"],
     },
   },
