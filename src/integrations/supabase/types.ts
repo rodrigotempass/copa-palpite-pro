@@ -14,16 +14,201 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      config: {
+        Row: {
+          campeao_oficial: string | null
+          id: number
+        }
+        Insert: {
+          campeao_oficial?: string | null
+          id?: number
+        }
+        Update: {
+          campeao_oficial?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
+      fases: {
+        Row: {
+          abertura: string
+          encerramento: string
+          id: string
+          nome: Database["public"]["Enums"]["fase_nome"]
+        }
+        Insert: {
+          abertura: string
+          encerramento: string
+          id?: string
+          nome: Database["public"]["Enums"]["fase_nome"]
+        }
+        Update: {
+          abertura?: string
+          encerramento?: string
+          id?: string
+          nome?: Database["public"]["Enums"]["fase_nome"]
+        }
+        Relationships: []
+      }
+      jogos: {
+        Row: {
+          bandeira_a: string | null
+          bandeira_b: string | null
+          created_at: string
+          data_hora: string
+          fase: Database["public"]["Enums"]["fase_nome"]
+          gols_a: number | null
+          gols_b: number | null
+          grupo: string | null
+          id: string
+          time_a: string
+          time_b: string
+        }
+        Insert: {
+          bandeira_a?: string | null
+          bandeira_b?: string | null
+          created_at?: string
+          data_hora: string
+          fase: Database["public"]["Enums"]["fase_nome"]
+          gols_a?: number | null
+          gols_b?: number | null
+          grupo?: string | null
+          id?: string
+          time_a: string
+          time_b: string
+        }
+        Update: {
+          bandeira_a?: string | null
+          bandeira_b?: string | null
+          created_at?: string
+          data_hora?: string
+          fase?: Database["public"]["Enums"]["fase_nome"]
+          gols_a?: number | null
+          gols_b?: number | null
+          grupo?: string | null
+          id?: string
+          time_a?: string
+          time_b?: string
+        }
+        Relationships: []
+      }
+      palpites: {
+        Row: {
+          created_at: string
+          gols_a: number
+          gols_b: number
+          id: string
+          jogo_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          gols_a: number
+          gols_b: number
+          id?: string
+          jogo_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          gols_a?: number
+          gols_b?: number
+          id?: string
+          jogo_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "palpites_jogo_id_fkey"
+            columns: ["jogo_id"]
+            isOneToOne: false
+            referencedRelation: "jogos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          campeao: string | null
+          created_at: string
+          email: string
+          id: string
+          nome: string
+          status: Database["public"]["Enums"]["user_status"]
+        }
+        Insert: {
+          campeao?: string | null
+          created_at?: string
+          email: string
+          id: string
+          nome: string
+          status?: Database["public"]["Enums"]["user_status"]
+        }
+        Update: {
+          campeao?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          nome?: string
+          status?: Database["public"]["Enums"]["user_status"]
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      ranking: {
+        Row: {
+          id: string | null
+          nome: string | null
+          pontos: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      fase_aberta_para_jogo: { Args: { _jogo_id: string }; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      pontos_palpite: {
+        Args: {
+          p_palpite_a: number
+          p_palpite_b: number
+          p_real_a: number
+          p_real_b: number
+        }
+        Returns: number
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "participant"
+      fase_nome: "grupos" | "oitavas" | "quartas" | "semis" | "final"
+      user_status: "pendente" | "aprovado" | "rejeitado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +335,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "participant"],
+      fase_nome: ["grupos", "oitavas", "quartas", "semis", "final"],
+      user_status: ["pendente", "aprovado", "rejeitado"],
+    },
   },
 } as const
